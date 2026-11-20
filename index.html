@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Encuesta de grupos pastorales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* Plan: página de una sola columna con barra superior fija y secciones por tema.
+   Un solo mundo visual en azul, fondo azul pálido y tarjetas blancas. */
+:root {
+  --bg: #EAF1FB;
+  --surface: #FFFFFF;
+  --ink: #0F1B3D;
+  --muted: #4A5A7D;
+  --line: #D5E1F5;
+  --track: #E8EFFB;
+  --accent: #2563EB;
+  --accent-deep: #1E40AF;
+  --accent-mid: #3B82F6;
+  --accent-soft: #BFDBFE;
+  --navy: #0B1F4B;
+  --warn: #F59E0B;
+  --warn-bg: #FEF6E4;
+  --neutral: #64748B;
+  --font: 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, p { margin: 0; text-wrap: balance; }
+ul { list-style: none; margin: 0; padding: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Barra superior */
+.top {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(234, 241, 251, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top-in {
+  max-width: 1200px; margin: 0 auto; padding: 10px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; font-size: 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: 10px; background: var(--accent); display: grid; place-items: center; flex: none; }
+.nav { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a {
+  white-space: nowrap; text-decoration: none; padding: 8px 14px; border-radius: 999px;
+  font-size: 14px; font-weight: 500; color: var(--muted);
+}
+.nav a:hover { background: #DCE8FB; color: var(--ink); }
+.nav a[aria-current="true"] { background: var(--accent); color: #FFFFFF; }
+
+/* Estructura */
+main { max-width: 1200px; margin: 0 auto; padding: 24px 20px 48px; display: flex; flex-direction: column; gap: 44px; }
+section { scroll-margin-top: 84px; display: flex; flex-direction: column; gap: 16px; }
+.sec-head { display: flex; flex-direction: column; gap: 6px; max-width: 760px; }
+.sec-head h2 { font-size: 28px; line-height: 1.2; font-weight: 700; }
+.sec-head p { font-size: 16px; color: var(--muted); }
+.grid { display: grid; gap: 20px; }
+.g-2 { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+.g-2e { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.card {
+  background: var(--surface); border-radius: 20px; padding: 24px 26px; min-width: 0;
+  box-shadow: 0 1px 0 var(--line), 0 10px 30px rgba(15, 40, 100, 0.07);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.card h3 { font-size: 19px; line-height: 1.3; font-weight: 700; }
+.card .sub { font-size: 15px; color: var(--muted); margin-bottom: 14px; }
+.card .note { font-size: 14px; color: var(--muted); margin-top: 14px; line-height: 1.55; }
+
+/* Portada */
+.hero {
+  border-radius: 26px; padding: 40px 40px 36px; color: #FFFFFF;
+  background: linear-gradient(120deg, #0B1F4B 0%, #13398F 58%, #1D4ED8 100%);
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px;
+}
+.hero .eyebrow { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #C7DBFF; font-weight: 500; }
+.hero h1 { font-size: 40px; line-height: 1.12; font-weight: 700; margin: 8px 0 10px; max-width: 640px; }
+.hero p { font-size: 16px; color: #DCE8FF; max-width: 560px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { font-size: 14px; font-weight: 500; padding: 9px 16px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); }
+
+/* Indicadores */
+.kpi { flex-direction: row; align-items: center; gap: 18px; padding: 22px 24px; }
+.kpi .ring { position: relative; width: 84px; height: 84px; flex: none; }
+.kpi .ring span { position: absolute; inset: 0; display: grid; place-items: center; font-size: 18px; font-weight: 700; }
+.kpi .t { font-size: 14px; color: var(--muted); }
+.kpi .big { font-size: 32px; line-height: 1.1; font-weight: 700; }
+.kpi .big small { font-size: 15px; font-weight: 500; color: var(--muted); }
+.kpi .d { font-size: 15px; line-height: 1.4; margin-top: 4px; }
+.kpi .split { display: flex; height: 10px; border-radius: 5px; overflow: hidden; gap: 3px; margin: 10px 0 8px; }
+
+/* Barras */
+.rows { display: flex; flex-direction: column; gap: 13px; }
+.row { display: grid; grid-template-columns: minmax(110px, var(--lw, 220px)) 1fr 44px; align-items: center; gap: 12px; }
+.row .lbl { font-size: 15px; line-height: 1.35; }
+.row .lbl small { display: block; font-size: 13px; color: var(--muted); }
+.row .track { height: 13px; border-radius: 7px; background: var(--track); overflow: hidden; }
+.row .fill { height: 100%; border-radius: 7px; }
+.row .val { font-size: 15px; font-weight: 700; text-align: right; }
+.row:hover .lbl { color: var(--accent-deep); }
+.stackbar { display: flex; height: 18px; border-radius: 9px; overflow: hidden; background: var(--track); gap: 2px; }
+.legend { display: flex; flex-direction: column; gap: 6px; margin: 12px 0 0; }
+.legend li { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.legend i { width: 12px; height: 12px; border-radius: 4px; flex: none; }
+.legend span { flex: 1; min-width: 0; }
+.legend b { font-weight: 700; }
+.stack-title { font-size: 14px; font-weight: 700; margin: 6px 0 10px; }
+
+/* Tabla */
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { padding: 11px 12px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; white-space: normal; }
+thead th { font-size: 13px; font-weight: 500; color: var(--muted); border-bottom: 2px solid var(--line); }
+tbody td.hi { font-weight: 700; color: var(--accent-deep); }
+tbody tr:last-child td { border-bottom: 0; }
+
+/* Dos cifras grandes */
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 4px; }
+.pair div { background: #F2F7FF; border-radius: 16px; padding: 16px 18px; }
+.pair .n { font-size: 36px; font-weight: 700; line-height: 1.1; }
+.pair .l { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+/* Atención */
+.flags { display: flex; flex-direction: column; gap: 12px; }
+.flags li { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border-radius: 16px; background: var(--warn-bg); font-size: 15px; line-height: 1.5; }
+.flags li.info { background: var(--track); }
+.flags li::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--warn); margin-top: 6px; flex: none; }
+.flags li.info::before { background: var(--accent); }
+
+/* Resultados en frases */
+.facts { display: flex; flex-direction: column; gap: 14px; }
+.facts li { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 14px; align-items: center; }
+.facts b { font-size: 28px; line-height: 1; font-weight: 700; color: var(--accent-deep); white-space: nowrap; }
+.facts p { font-size: 16px; line-height: 1.4; text-wrap: pretty; }
+.facts li.warn b { color: #B45309; }
+
+/* Todos los comentarios */
+.all-wrap { display: flex; flex-direction: column; gap: 14px; }
+.all { background: var(--surface); border-radius: 20px; box-shadow: 0 1px 0 var(--line), 0 10px 30px rgba(15, 40, 100, 0.07); }
+.all summary { cursor: pointer; padding: 20px 26px; display: flex; align-items: center; gap: 16px; font-size: 17px; font-weight: 700; line-height: 1.35; list-style: none; }
+.all summary::-webkit-details-marker { display: none; }
+.all summary::after { content: '+'; flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--track); color: var(--accent-deep); display: grid; place-items: center; font-size: 20px; font-weight: 500; }
+.all[open] summary::after { content: '\2212'; }
+.all .count { margin-left: auto; font-size: 14px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+.all .inner { padding: 0 26px 26px; display: flex; flex-direction: column; gap: 14px; }
+.all h4 { margin: 8px 0 0; font-size: 15px; font-weight: 700; color: var(--accent-deep); }
+.quotes.tight { gap: 8px; }
+.quotes.tight li { padding: 10px 14px; font-size: 15px; }
+.quotes.tight li .grp { display: inline-block; margin: 0 8px 0 0; padding: 2px 10px; border-radius: 999px; background: var(--track); color: var(--accent-deep); font-size: 12.5px; font-weight: 700; line-height: 1.5; letter-spacing: 0.01em; vertical-align: 1px; }
+[hidden] { display: none !important; }
+.filtro { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 0 16px; padding: 16px 20px; background: var(--surface); border-radius: 16px; box-shadow: 0 1px 0 var(--line); }
+.filtro label { font-size: 15px; font-weight: 700; }
+.filtro select { font: inherit; font-size: 15px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 12px; background: #F8FBFF; color: var(--ink); max-width: 100%; }
+.filtro .nota { flex-basis: 100%; margin: 0; font-size: 14px; color: var(--muted); }
+
+/* Comentarios */
+.quotes { display: flex; flex-direction: column; gap: 12px; }
+.quotes li { background: #F2F7FF; border-left: 4px solid var(--accent-soft); border-radius: 0 14px 14px 0; padding: 12px 16px; font-size: 16px; line-height: 1.55; overflow-wrap: anywhere; }
+.quotes.cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.card.wide { grid-column: 1 / -1; }
+@media (max-width: 960px) { .quotes.cols { grid-template-columns: minmax(0, 1fr); } }
+
+/* Lo más importante y próximos pasos */
+.key { gap: 10px; border-left: 6px solid var(--accent); }
+.key ul { display: flex; flex-direction: column; gap: 10px; }
+.key li { font-size: 17px; line-height: 1.45; padding-left: 20px; position: relative; }
+.key li::before { content: ''; position: absolute; left: 0; top: 0.6em; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: paso; display: flex; flex-direction: column; gap: 16px; }
+.steps li { counter-increment: paso; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 14px; align-items: start; font-size: 16px; line-height: 1.5; }
+.steps li::before { content: counter(paso); width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #FFFFFF; display: grid; place-items: center; font-weight: 700; }
+
+footer { max-width: 1200px; margin: 0 auto; padding: 0 20px 48px; font-size: 14px; line-height: 1.65; color: var(--muted); }
+footer p { max-width: 860px; text-wrap: pretty; }
+
+@media (max-width: 960px) {
+  .g-2, .g-2e, .g-3 { grid-template-columns: minmax(0, 1fr); }
+  .g-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  main { padding-top: 16px; gap: 36px; }
+  .hero { padding: 28px 22px; border-radius: 22px; }
+  .hero h1 { font-size: 30px; }
+  .g-4 { grid-template-columns: minmax(0, 1fr); }
+  .card { padding: 20px 18px; }
+  .sec-head h2 { font-size: 24px; }
+  .row { grid-template-columns: minmax(96px, 150px) 1fr 40px; gap: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#resumen">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"><path d="M3 15V9M9 15V3M15 15V7"/></svg>
+      </span>
+      <span>Encuesta de grupos pastorales</span>
+    </a>
+    <nav class="nav" aria-label="Secciones de la página" id="nav">
+      <a href="#resumen">Resumen</a>
+      <a href="#resultados">Resultados</a>
+      <a href="#hojas">Las dos hojas</a>
+      <a href="#comunicacion">Comunicación</a>
+      <a href="#participacion">Participación</a>
+      <a href="#comentarios">Comentarios</a>
+      <a href="#atencion">Atención</a>
+      <a href="#pasos">Próximos pasos</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section id="resumen" aria-label="Resumen">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Encuesta de satisfacción y participación · noviembre de 2026</div>
+        <h1>Los grupos pastorales valoran muy bien su experiencia; lo que más puede crecer es la participación y conocer las prioridades</h1>
+        <p>Resultados de la encuesta a integrantes de los grupos pastorales, respondida del 2 al 14 de noviembre de 2026.</p>
+      </div>
+      <div class="chips">
+        <span class="chip">157 personas</span>
+        <span class="chip">194 evaluaciones de grupo</span>
+        <span class="chip">19 grupos</span>
+      </div>
+    </div>
+
+    <div class="card key">
+      <h3>Lo más importante</h3>
+      <ul>
+        <li><strong>Casi todos están satisfechos.</strong> 9 de cada 10 evaluaciones califican su satisfacción general con 4 o 5 sobre 5.</li>
+        <li><strong>Lo mejor valorado:</strong> recibir la información a tiempo, el ambiente de respeto y el acompañamiento del coordinador.</li>
+        <li><strong>Lo que más puede crecer:</strong> conocer con claridad el objetivo del grupo (84 %), sentir total confianza para opinar (76 %), participar con frecuencia en la parroquia (59 %) y conocer las prioridades del párroco (57 %).</li>
+        <li><strong>Hay tres grupos donde conviene conversar con calma</strong> y siete respuestas que hay que confirmar. Están en la sección «Qué atender primero».</li>
+      </ul>
+      <p class="note">Cómo leer esta página: respondieron 157 personas. En la primera hoja cada persona pudo evaluar hasta tres grupos, por eso hay 194 evaluaciones de grupo. Las notas van de 1 (la más baja) a 5 (la más alta).</p>
+    </div>
+
+    <div class="sec-head" style="margin-top: 8px">
+      <h2>Los resultados en frases</h2>
+      <p>Cada cifra dice qué porcentaje respondió eso. En ámbar, lo que más puede mejorar.</p>
+    </div>
+    <div class="grid g-3">
+      <div class="card">
+        <h3>Dentro de los grupos</h3>
+        <p class="sub">Sobre las 194 evaluaciones de grupo</p>
+        <ul class="facts">
+          <li><b class="num">91 %</b><p>califica su satisfacción general con 4 o 5 sobre 5.</p></li>
+          <li><b class="num">96 %</b><p>dice que casi siempre o siempre hay un ambiente de respeto.</p></li>
+          <li><b class="num">98,5 %</b><p>dice que casi siempre o siempre recibe la información a tiempo.</p></li>
+          <li><b class="num">95 %</b><p>dice que casi siempre o siempre su coordinador lo acompaña.</p></li>
+          <li><b class="num">84 %</b><p>conoce con claridad el objetivo de su grupo.</p></li>
+          <li><b class="num">76 %</b><p>se expresa con total confianza dentro del grupo.</p></li>
+          <li><b class="num">86 %</b><p>asiste siempre o casi siempre a las reuniones de su grupo.</p></li>
+          <li class="warn"><b class="num">63 %</b><p>se siente plenamente tenido en cuenta por la parroquia.</p></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Participación en la parroquia</h3>
+        <p class="sub">Sobre las 157 personas; en las razones podían marcar varias</p>
+        <ul class="facts">
+          <li class="warn"><b class="num">59 %</b><p>participa con frecuencia en las actividades de la parroquia.</p></li>
+          <li class="warn"><b class="num">41 %</b><p>participa solo algunas veces, o rara vez o nunca.</p></li>
+          <li><b class="num">68 %</b><p>dice que no participa más por falta de tiempo.</p></li>
+          <li><b class="num">14 %</b><p>dice que no participa más por horarios que no le convienen.</p></li>
+          <li><b class="num">12 %</b><p>dice que no participa más por transporte, salud o movilidad.</p></li>
+          <li><b class="num">9 %</b><p>dice que no participa más porque no se entera a tiempo.</p></li>
+          <li><b class="num">17 %</b><p>dice que no tiene ninguna dificultad para participar.</p></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Prioridades y comunicación</h3>
+        <p class="sub">Prioridades: sobre las 157 personas. Canales: sobre las 194 evaluaciones, podían marcar varios</p>
+        <ul class="facts">
+          <li class="warn"><b class="num">57 %</b><p>conoce con claridad las prioridades pastorales del párroco.</p></li>
+          <li><b class="num">29 %</b><p>conoce solo algunas de esas prioridades.</p></li>
+          <li><b class="num">13 %</b><p>las ha oído sin tenerlas claras o no las conoce.</p></li>
+          <li><b class="num">93 %</b><p>recibe la información por el grupo de WhatsApp.</p></li>
+          <li><b class="num">48 %</b><p>la recibe también en las reuniones del grupo.</p></li>
+          <li><b class="num">23 %</b><p>la recibe por comunicación verbal o personal.</p></li>
+          <li><b class="num">13 %</b><p>la recibe por llamadas telefónicas.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="resultados" aria-label="Resultados">
+    <div class="sec-head">
+      <h2>Resultados dentro de los grupos</h2>
+      <p>La experiencia es muy buena y homogénea. Catequistas, Voluntariado, Comunicaciones, Pequeñas Comunidades y Acogida quedan por debajo de 4,5 en satisfacción.</p>
+    </div>
+    <div class="grid g-2">
+      <div class="card">
+        <h3>Entre el 76 % y el 84 % elige la mejor opción en 8 de las 10 preguntas</h3>
+        <p class="sub">Solo el 63 % se siente plenamente tenido en cuenta y el 42 % asiste siempre a las reuniones. Porcentaje de las 194 evaluaciones que eligen la mejor opción.</p>
+        <ul class="rows" id="preguntas" style="--lw: 230px"></ul>
+        <p class="note">En ámbar, las preguntas con menos del 70 % en la mejor opción.</p>
+      </div>
+      <div class="card">
+        <h3>Satisfacción de los 19 grupos</h3>
+        <p class="sub">Promedio de 1 a 5, donde 5 es la mejor nota</p>
+        <p class="stack-title">Grupos con 8 o más respuestas</p>
+        <ul class="rows" id="grupos" style="--lw: 160px"></ul>
+        <p class="stack-title" style="margin-top: 24px">Grupos con menos de 8 respuestas</p>
+        <p class="sub" style="margin: -4px 0 12px">Son pocas respuestas: tómalos como orientación, no como conclusión.</p>
+        <ul class="rows" id="grupos-pocos" style="--lw: 160px"></ul>
+        <p class="note">En ámbar, menos de 4,5. «Varios grupos» reúne 5 respuestas que nombran más de un grupo; otra respuesta no indica el grupo (satisfacción 1, una de las 7 por confirmar). Los promedios incluyen 7 respuestas que parecen un error al marcar la nota (satisfacción 1 con 4 o 5 en todo lo demás). Sin ellas, Pequeñas Comunidades sube a 4,75 y Catequistas a 4,30.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="hojas" aria-label="Las dos hojas">
+    <div class="sec-head">
+      <h2>Las dos hojas, lado a lado</h2>
+      <p>Los resultados se parecen mucho. Las diferencias más claras son que la satisfacción y el acompañamiento del coordinador son algo menores en la hoja 2. Cada hoja reunió grupos distintos: Cargueros aporta 32 evaluaciones a la hoja 1 y solo 1 a la hoja 2, y eso explica en parte las diferencias.</p>
+    </div>
+    <div class="card">
+      <h3>Hoja 1 frente a hoja 2</h3>
+      <p class="sub">Hoja 1: 117 evaluaciones de 80 personas, del 4 al 14 de noviembre. Hoja 2: 77 evaluaciones de 77 personas, del 2 al 4 de noviembre.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th scope="col">Medida</th><th scope="col">Hoja 1</th><th scope="col">Hoja 2</th></tr></thead>
+          <tbody id="tabla"></tbody>
+        </table>
+      </div>
+      <p class="note">Promedios de 1 a 5. En negrita, el valor más alto de cada fila. Los porcentajes de participación y de prioridades son sobre personas; los de canales, sobre evaluaciones.</p>
+    </div>
+  </section>
+
+  <section id="comunicacion" aria-label="Comunicación">
+    <div class="sec-head">
+      <h2>Comunicación</h2>
+      <p>WhatsApp llega a casi todos, y quienes reciben la información por más de un canal la califican como más clara.</p>
+    </div>
+    <div class="grid g-2e">
+      <div class="card">
+        <h3>Cómo reciben la información: el 93 % por WhatsApp</h3>
+        <p class="sub">Porcentaje de las 194 evaluaciones; podían marcar varios canales</p>
+        <ul class="rows" id="canales" style="--lw: 190px"></ul>
+      </div>
+      <div class="card">
+        <h3>Más canales, más claridad</h3>
+        <p class="sub">Claridad de la información, promedio de 1 a 5</p>
+        <div class="pair">
+          <div><p class="n num">4,61</p><p class="l">con un solo canal (87 evaluaciones)</p></div>
+          <div><p class="n num">4,92</p><p class="l">con tres o más canales (48 evaluaciones)</p></div>
+        </div>
+        <p class="note">Es una asociación y no prueba que añadir canales mejore la claridad. En la hoja 1 pesan más las reuniones del grupo (56 %) y la comunicación verbal (27 %) que en la hoja 2 (36 % y 16 %). Trece evaluaciones (7 %) no usan WhatsApp.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="participacion" aria-label="Participación">
+    <div class="sec-head">
+      <h2>Participación en la vida comunitaria</h2>
+      <p>Cuatro de cada diez personas participan solo algunas veces o rara vez en las actividades de la parroquia, y la falta de tiempo es la razón más citada.</p>
+    </div>
+    <div class="grid g-2e">
+      <div class="card">
+        <h3>Por qué no participan más: el 68 % dice que es falta de tiempo</h3>
+        <p class="sub">Porcentaje de las 157 personas; podían marcar varias razones</p>
+        <ul class="rows" id="razones" style="--lw: 190px"></ul>
+        <p class="note">En gris, quienes dicen no tener dificultades. Otras razones, como la falta de motivación o no tener claro el propósito, suman 3 % o menos cada una.</p>
+      </div>
+      <div class="card">
+        <h3>Vida comunitaria</h3>
+        <p class="sub">Porcentaje de las 157 personas</p>
+        <p class="stack-title">Participación en actividades de la parroquia</p>
+        <div class="stackbar" id="activ-bar" aria-hidden="true"></div>
+        <ul class="legend" id="activ-leg"></ul>
+        <p class="stack-title" style="margin-top: 22px">Conocimiento de las prioridades del párroco</p>
+        <div class="stackbar" id="prior-bar" aria-hidden="true"></div>
+        <ul class="legend" id="prior-leg"></ul>
+        <p class="note">Quienes no conocen las prioridades o apenas las han oído participan poco en el 71 % de los casos, frente al 32 % de quienes las conocen con claridad.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="comentarios" aria-label="Comentarios">
+    <div class="sec-head">
+      <h2>Lo que dijeron, con sus palabras</h2>
+      <p>Se recibieron 262 comentarios escritos sobre cambios y sugerencias. Aquí hay una selección por tema, tal como se escribieron y sin nombres. Más abajo están todos. La encuesta es anónima.</p>
+    </div>
+    <div class="grid g-2e">
+      <div class="card">
+        <h3>Más compromiso y participación</h3>
+        <p class="sub">Unos 22 comentarios</p>
+        <ul class="quotes">
+          <li>Me gustaría que la gente que se compromete a participar lo hiciera realmente</li>
+          <li>Que haya más compromiso de parte mía en las reuniones</li>
+          <li>Que cada una pongamos de parte más Amor y ganas de participar en cada grupo</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Más fraternidad e integración en el grupo</h3>
+        <p class="sub">Unos 21 comentarios</p>
+        <ul class="quotes">
+          <li>Una reunión presencial al mes, para saludar, compartir e integrar al grupo. Revisar métricas y resultados del mes anterior y según esto proponer objetivos y campañas para el nuevo mes.</li>
+          <li>El acompañamiento y comunicación con los coordinadores es excelente, deberíamos ser más unidos en el grupo y conocernos más entre las diferentes parejas, ya que a veces ni el nombre nos sabemos del que está al lado.</li>
+          <li>Un día de convivencia con nuestras familias para conocer más y que los demás miembros de la familia se integren más a la iglesia.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Integración entre grupos pastorales</h3>
+        <p class="sub">Unos 18 comentarios</p>
+        <ul class="quotes">
+          <li>Necesitamos buscar la manera de que haya actividades intergrupos, para relacionar la misión de los diferentes grupos y evitar las “ruedas sueltas” (cada uno por su lado).</li>
+          <li>Debería hacerse una reunión semestral con todos los grupos, para conocerse y presentar información importante de las actividades que se vayan a desarrollar en ese tiempo, compartir logros, retos, propuestas, etc.</li>
+          <li>Debiéramos de hacer más actividades todos juntos, para no vernos tan divididos</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Más cercanía del párroco y los sacerdotes</h3>
+        <p class="sub">Unos 16 comentarios, casi todos para pedir más acompañamiento</p>
+        <ul class="quotes">
+          <li>El parroco deberia acompañar de vez en cuanto los grupos, entenderlos mas de cerca, vivir la experiencia.</li>
+          <li>Puede ser muy enriquecedor el acompañamiento por parte de sus sacerdotes en diferente encuentros, que puedan vincularse con temas del sacramento del matrimonio, recordarnos nuestros votos matrimoniales y/o exponer diferentes temas.</li>
+          <li>Me parece siempre hay participación de los grupos y de verdad el padre tiene muy buen carisma para con la comunidad y los grupos antes gracias por todo lo que hace por nuestra comunidad</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Reuniones, horarios y comunicación</h3>
+        <p class="sub">Unos 20 comentarios piden reuniones más frecuentes, 10 hablan de comunicación y 4 de horarios</p>
+        <ul class="quotes">
+          <li>Hacer varios encuentros virtuales - cada 15 días - y uno presencial por mes.</li>
+          <li>Las actividades de formación e integracion podrían ser después de las 6pm por los que trabajamos</li>
+          <li>Que la información sea más clara y no se sature el chat.</li>
+          <li>Hacer más publicidad a los grupos y actividades que organice la parroquia, no solo en las misas, sino por redes sociales y pubicidad visual en la iglesia y otros lugares.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Formación</h3>
+        <p class="sub">Unos 13 comentarios</p>
+        <ul class="quotes">
+          <li>iniciar espacios de asesorías espirituales individuales y por pareja dentro de los tiempos del grupo.</li>
+          <li>Crear más espacios de formación Espiritual para los catequistas.</li>
+          <li>Más retiros</li>
+        </ul>
+      </div>
+    </div>
+      <div class="card wide">
+        <h3>Lo que valoran y agradecen</h3>
+        <p class="sub">Algunas de las frases con las que describen lo que hacen bien y lo que agradecen</p>
+        <ul class="quotes cols">
+          <li>La buena relación que manejamos todos. Actualmente somos un grupo muy bello donde uno encuentra paz y verdaderos amigos.</li>
+          <li>Como pequeña comunidad, considero que lo que estamos haciendo bien es la cercanía, la acogida y el conocernos de verdad. Nos apoyamos, oramos unos por otros y estamos pendientes de quien falta o está pasando por un momento difícil.</li>
+          <li>Considero que este grupo hace una labor muy bonita, que es llevar el evangelio en imagen, mostrando a las personas la vida de Jesús.</li>
+          <li>Siempre es muy nutritivo el aprendizaje desde los testimonios de otras parejas y expositores como el psicólogo.</li>
+          <li>He aprendido mucho sobre La Palabra. Me siento muy contenta.</li>
+          <li>Solo dar gracias a la parroquia y a esta comunidad en la que me siento feliz de pertenecer. Gracias</li>
+        </ul>
+      </div>
+
+    <div class="sec-head" style="margin-top: 20px">
+      <h2>Todos los comentarios</h2>
+      <p>Aquí están los comentarios escritos, en el orden de la hoja y con sus errores de escritura. Se omitieron 48 respuestas sin contenido («Ninguno», «Nada», «N.A.», «Si» o signos sueltos) y 7 repeticiones exactas de una misma persona. Siete comentarios que mencionan a personas concretas o a la conducción de la parroquia se entregan por separado al párroco.</p>
+    </div>
+    <div class="all-wrap" id="todos"></div>
+  </section>
+
+  <section id="atencion" aria-label="Atención">
+    <div class="sec-head">
+      <h2>Qué atender primero</h2>
+      <p>Tres grupos y siete respuestas dudosas piden atención antes que el resto. Son puntos para conversar, no veredictos: varios grupos tienen pocas respuestas.</p>
+    </div>
+    <div class="grid g-2e">
+      <div class="card">
+        <h3>Puntos de atención</h3>
+        <p class="sub">Donde conviene conversar o revisar primero</p>
+        <ul class="flags">
+          <li><p><strong>Catequistas.</strong> Satisfacción 4,0 y solo el 45 % se expresa con total confianza (11 evaluaciones).</p></li>
+          <li><p><strong>Acogida.</strong> Solo el 33 % se expresa con total confianza y el 60 % conoce el objetivo del grupo (15 evaluaciones).</p></li>
+          <li><p><strong>Comunicaciones.</strong> El acompañamiento del coordinador promedia 3,0, pero son solo 5 evaluaciones: conviene mirarlo con más respuestas.</p></li>
+          <li class="info"><p><strong>Respuestas por confirmar.</strong> 7 respuestas ponen satisfacción 1 y notas de 4 o 5 en casi todo lo demás. Lo más probable es que entendieran el 1 como la mejor nota; conviene confirmarlo.</p></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Lo que más piden en sus comentarios</h3>
+        <p class="sub">Número aproximado de comentarios por tema</p>
+        <ul class="rows" id="piden" style="--lw: 220px"></ul>
+        <p class="note">Un tercio de las respuestas no propone cambios. Los tres primeros temas se cuentan sobre 194 respuestas; los dos últimos, sobre 262 comentarios.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="pasos" aria-label="Próximos pasos">
+    <div class="sec-head">
+      <h2>Próximos pasos que sugiere la encuesta</h2>
+      <p>Ordenados de lo más urgente a lo de mayor alcance.</p>
+    </div>
+    <div class="card">
+      <ol class="steps">
+        <li><p><strong>Confirmar la escala.</strong> Revisar las 7 respuestas dudosas y, en el formulario, rotular la pregunta: «1 = nada satisfecho, 5 = muy satisfecho».</p></li>
+        <li><p><strong>Conversar con tres grupos.</strong> Catequistas (respeto y confianza para expresarse), Acogida (solo 33 % se expresa con total confianza) y Comunicaciones (acompañamiento 3,0).</p></li>
+        <li><p><strong>Aclarar el objetivo de cada grupo.</strong> El 16 % no lo conoce con claridad; es más marcado en Juvenil Shekinah (44 % lo conoce), Acogida (60 %) y Pequeñas Comunidades (73 %).</p></li>
+        <li><p><strong>Comunicar las prioridades del párroco.</strong> Solo el 57 % las conoce con claridad y quienes las conocen participan más. Varios comentarios piden una reunión semestral con todos los grupos.</p></li>
+        <li><p><strong>Facilitar la participación.</strong> El 68 % cita la falta de tiempo y el 14 % los horarios: probar actividades después de las 6 p. m. y publicar el calendario con más anticipación.</p></li>
+        <li><p><strong>Acercar al párroco y a los sacerdotes a los grupos.</strong> Es una de las peticiones más repetidas en los comentarios.</p></li>
+        <li><p><strong>Si se repite la encuesta,</strong> usar una lista fija de grupos y permitir identificar el grupo para poder comparar entre rondas.</p></li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Fuente: hojas «Respuestas de formulario 1» (80 personas) y «Copia de Respuestas de formulario 1» (77 personas) del archivo de la encuesta. La mejor opción es la nota 5, «Siempre», «Sí, con total confianza», «Sí, plenamente» o «Sí, lo conozco claramente». Los comentarios se clasificaron por palabras clave, por eso los conteos son aproximados.</p>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var ACCENT = 'var(--accent)', WARN = 'var(--warn)', NEUTRAL = 'var(--neutral)';
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+  function dec(n, d) { return n.toFixed(d).replace('.', ','); }
+  function pct(k, total) { return Math.round(k / total * 100) + ' %'; }
+
+  function bars(id, rows) {
+    var ul = document.getElementById(id);
+    rows.forEach(function (o) {
+      var li = el('li', 'row');
+      li.title = o.label + ': ' + o.val;
+      var l = el('span', 'lbl', o.label);
+      if (o.sub) l.appendChild(el('small', '', o.sub));
+      var t = el('div', 'track'); t.setAttribute('aria-hidden', 'true');
+      var f = el('div', 'fill'); f.style.width = o.w + '%'; f.style.background = o.color;
+      t.appendChild(f);
+      li.appendChild(l); li.appendChild(t); li.appendChild(el('span', 'val num', o.val));
+      ul.appendChild(li);
+    });
+  }
+
+  function stack(barId, legId, rows, total) {
+    var bar = document.getElementById(barId), leg = document.getElementById(legId);
+    rows.forEach(function (r) {
+      var seg = el('div'); seg.style.width = (r[1] / total * 100) + '%'; seg.style.background = r[2];
+      bar.appendChild(seg);
+      var li = el('li');
+      var sw = el('i'); sw.style.background = r[2]; sw.setAttribute('aria-hidden', 'true');
+      li.appendChild(sw); li.appendChild(el('span', '', r[0])); li.appendChild(el('b', 'num', pct(r[1], total)));
+      leg.appendChild(li);
+    });
+  }
+
+
+  /* Mejor opción por pregunta: [pregunta, evaluaciones en la mejor opción], n = 194 */
+  bars('preguntas', [
+    ['Claridad de la información recibida', 163], ['Conoce claramente el objetivo del grupo', 163],
+    ['Ambiente de respeto', 158], ['Acompañamiento del coordinador', 157],
+    ['Recibe la información a tiempo', 156], ['El coordinador escucha sus inquietudes', 155],
+    ['Satisfacción general', 151], ['Se expresa con total confianza', 147],
+    ['Se siente plenamente tenido en cuenta', 122], ['Asiste siempre a las reuniones', 82]
+  ].map(function (r) {
+    var p = r[1] / 194 * 100;
+    return { label: r[0], w: p.toFixed(1), val: Math.round(p) + ' %', color: p < 70 ? WARN : ACCENT };
+  }));
+
+  /* Satisfacción por grupo: [grupo, evaluaciones, promedio] */
+  function grp(r) {
+    return { label: r[0], sub: r[1] + (r[1] === 1 ? ' respuesta' : ' respuestas'), w: (r[2] / 5 * 100).toFixed(1), val: dec(r[2], 2), color: r[2] < 4.5 ? WARN : ACCENT };
+  }
+  bars('grupos', [
+    ['Juvenil Shekinah', 9, 5.0], ['Cargueros', 33, 4.94], ['Pastoral Familiar', 9, 4.89],
+    ['Salud y Ministros', 14, 4.57], ['Proclamadores', 20, 4.55], ['Madres Mónicas', 8, 4.5],
+    ['Acogida', 15, 4.47], ['Pequeñas Comunidades', 26, 4.46], ['Voluntariado', 12, 4.33], ['Catequistas', 11, 4.0]
+  ].map(grp));
+  bars('grupos-pocos', [
+    ['Coro Yadah', 4, 5.0], ['Acólitos', 2, 5.0], ['Adoradores', 1, 5.0], ['Cenáculo', 1, 5.0],
+    ['Escuelita de Jesús', 1, 5.0], ['Chi Rho', 6, 4.83], ['Espiritualidad Mariana', 5, 4.6],
+    ['Varios grupos', 5, 4.6], ['A los pies del Maestro', 6, 4.5], ['Comunicaciones', 5, 4.4]
+  ].map(grp));
+
+  /* Canales: [canal, evaluaciones], n = 194 */
+  bars('canales', [
+    ['Grupo de WhatsApp', 181], ['Reuniones del grupo', 93], ['Comunicación verbal o personal', 44],
+    ['Mensajes individuales', 29], ['Llamadas telefónicas', 26]
+  ].map(function (r) {
+    return { label: r[0], w: (r[1] / 194 * 100).toFixed(1), val: pct(r[1], 194), color: ACCENT };
+  }));
+
+  /* Razones: [razón, personas, color], n = 157 */
+  bars('razones', [
+    ['Falta de tiempo', 107, ACCENT], ['Horarios no convenientes', 22, ACCENT],
+    ['Transporte, salud o movilidad', 19, ACCENT], ['No se enteran a tiempo', 14, ACCENT],
+    ['Sin dificultades', 27, NEUTRAL]
+  ].map(function (r) {
+    return { label: r[0], w: (r[1] / 157 * 100).toFixed(1), val: pct(r[1], 157), color: r[2] };
+  }));
+
+  stack('activ-bar', 'activ-leg', [
+    ['Siempre que puedo', 57, 'var(--accent-deep)'], ['Frecuentemente', 36, 'var(--accent-mid)'],
+    ['Algunas veces', 52, 'var(--accent-soft)'], ['Rara vez o nunca', 12, WARN]
+  ], 157);
+  stack('prior-bar', 'prior-leg', [
+    ['Las conoce con claridad', 90, 'var(--accent-deep)'], ['Conoce algunas', 46, 'var(--accent-mid)'],
+    ['Las ha oído, pero no las tiene claras', 14, 'var(--accent-soft)'], ['No las conoce', 7, WARN]
+  ], 157);
+
+  /* Comentarios: [tema, comentarios aproximados] */
+  bars('piden', [
+    ['Más compromiso y participación', 22], ['Más fraternidad e integración en el grupo', 21],
+    ['Reuniones o encuentros más frecuentes', 20], ['Integración entre grupos pastorales', 18],
+    ['Más cercanía del párroco y los sacerdotes', 16]
+  ].map(function (r) {
+    return { label: r[0], w: (r[1] / 22 * 100).toFixed(1), val: String(r[1]), color: ACCENT };
+  }));
+
+  /* Tabla de las dos hojas: [medida, hoja 1, hoja 2, formato] */
+  var rows = [
+    ['Satisfacción general', 4.74, 4.38, 'n'],
+    ['Satisfacción sin las 7 evaluaciones dudosas', 4.78, 4.66, 'n'],
+    ['Ambiente de respeto', 4.81, 4.71, 'n'],
+    ['Información recibida a tiempo', 4.76, 4.83, 'n'],
+    ['Claridad de la información', 4.82, 4.64, 'n'],
+    ['Acompañamiento del coordinador', 4.84, 4.55, 'n'],
+    ['El coordinador escucha sus inquietudes', 4.76, 4.62, 'n'],
+    ['Se siente tenido en cuenta', 4.58, 4.40, 'n'],
+    ['Asistencia a las reuniones del grupo', 4.21, 4.31, 'n'],
+    ['Participan con frecuencia en la parroquia', 61, 57, 'p'],
+    ['Conocen con claridad las prioridades del párroco', 54, 61, 'p'],
+    ['Reciben la información por WhatsApp', 91, 97, 'p'],
+    ['Reciben la información en reuniones del grupo', 56, 36, 'p']
+  ];
+  var tb = document.getElementById('tabla');
+  rows.forEach(function (r) {
+    var tr = el('tr');
+    tr.appendChild(el('td', '', r[0]));
+    [r[1], r[2]].forEach(function (v) {
+      var td = el('td', 'num' + (v === Math.max(r[1], r[2]) ? ' hi' : ''), r[3] === 'n' ? dec(v, 2) : v + ' %');
+      tr.appendChild(td);
+    });
+    tb.appendChild(tr);
+  });
+
+  var COM = {"m1":[["El acompañamiento de Felipe Suárez ha sido enriquecedor y debería mantenerse",["Acogida"]],["Formación para los ministros y acompañantes sobre el clero, los actos de eucaristía",["Salud y Ministros"]],["Tener otra persona líder en el grupo estoy sola",["Escuelita de Jesús"]],["Creo que todo está perfecto",["Cargueros"]],["En general, la coordinación y las sub coordinaciones son buenas, van alineadas en gran medida a lo que la parroquia plantea; en cuanto al ambiente dentro de cada sub grupo cabe recalcar que se denota en gran medida una falta de obediencia y en ocasiones de disposición respecto a lo planteado.",["Catequistas"]],["No tengo nada que decir sobre esto",["Cargueros"]],["Unirse más a las propuestas de la parroquia",["Cargueros"]],["Mas compromiso en todo el tiempo",["Cargueros"]],["Reuniones ocasionales de formación para los niños",["Cargueros"]],["Para mejorar el funcionamiento, propondría un poco más de capacidad económica en cuanto a la parroquia con el grupo. Para seguir comprando imágenes y cada día tener más pasos de procesión. Y ser un ejemplo para la Comunidad llamando más fieles Me encantaría también que se gestionará el acompañamiento de una banda para las procesiones",["Cargueros"]],["Nada, todo está perfecto. Nos va muy bien con Adriana.",["Coro Yadah"]],["Es un buen grupo",["Cargueros"]],["Necesitamos más apoyo en algunos puntos de la parroquia",["Cargueros"]],["Ninguno estamos perfectos",["Cargueros"]],["Se reuniera más seguido para escuchar nuestras sugerencias y dificultades .",["Catequistas"]],["Para el funcionamiento, invitar a las personas a participar en dicho grupo",["Salud y Ministros"]],["Ser más concientes con las cosas que decimos",["Cargueros"]],["Igualmente tener cuidado con las palabras que podemos llegar a decir",["Juvenil Shekinah"]],["Ser menos estricta",["Salud y Ministros"]],["Ninguna sugerencia al respecto",["Proclamadores"]],["No hay sugerencias, ya que las reuniones presenciales son nulas",["Madres Mónicas"]],["Un poco más de trabajo en equipo",["Cargueros"]],["Más colaboración",["Cargueros"]],["Una reunión presencial al mes, para saludar, compartir e integrar al grupo. Revisar métricas y resultados del mes anterior y según esto proponer objetivos y campañas para el nuevo mes.",["Comunicaciones"]],["Más actividades",["Cargueros"]],["Ninguno, todo super bien",["Salud y Ministros"]],["Considero que todo se está haciendo muy bien",["Voluntariado"]],["Considero que todo está muy bien",["Cargueros"]],["Que lleguen mas fondos además de los propios, para comprar las flores, mejorar las imágenes y poder adquirir mas figuras",["Cargueros"]],["Nada de cambio",["Cargueros"]],["Todo esta bien",["Cargueros","Juvenil Shekinah"]],["Estamos en el proyecto de incluir instrumentacion",["Coro Yadah"]],["Podría ser una reunión trimestral",["Cargueros"]],["Realizar actividades de integración para Que los niños compartan.",["Cargueros"]],["Todo muy bien",["Cargueros"]],["Para mí todo está súper bien",["Cargueros"]],["Me parece que todo está súper bien así",["Cargueros"]],["Me parece que funciona todo muy bien",["Cargueros"]],["Ninguna, todo excelente",["Cargueros"]],["Todo bien gracias a Dios",["Cargueros"]],["Pienso que podríamos ser más partícipes de otras celebraciones , y ser un poco más participes",["Cargueros"]],["Conitnuar con las reuniones y soporte a cada uno de los miembros del grupo",["Pequeñas Comunidades"]],["Un espacio más amplio por la cantidad de niños que asisten. Reflexiones con participación de los niños",["Acólitos"]],["Creo que la comunicación sería algo para mejorar, ya que en momentos se pueden presentar problemas por no tener la suficiente comunicación entre nosotros",["Cargueros"]],["El reunirse de manera más frecuente y de manera presencial para fortalecer el compartir entre los integrantes",["Comunicaciones"]],["Creo que con mejor comunicación y más acompañamiento por parte de la parroquia siendo una pequeña comunidad, podemos estar más unidos y servir mejor.",["Pequeñas Comunidades"]],["Siento que hasta el momento se ha fortalecido aunque podríamos realizar más actividades donde se tengan encuenta las facilidades de cada persona",["Pequeñas Comunidades"]],["Más participación y actividades",["Voluntariado"]],["Persistir",["Voluntariado"]],["Participar en la socialización de temas de Dios para el grupo en general.",["Espiritualidad Mariana"]],["Participar en la socialización de temas en el grupo",["Espiritualidad Mariana"]],["Me gustaría dedicar algún momento para volver *acción* la Palabra de Dios, y salir de nuestra zona de confort, e ir a un asilo, a un hogar de niños, etc, y regalarles un día especial, diferente.",["Pequeñas Comunidades"]],["Está bien como está",["Chi Rho"]],["Está bien",["A los pies del Maestro"]],["Hacer el rosario antes de la eucaristía",["Cenáculo"]],["No tanto comentario y criticas o informes no adecuados",["Espiritualidad Mariana"]],["Ser más dinámico, incluir retiros",["Pequeñas Comunidades"]],["Salidas de vez en cuando ,para que no sea tan monótono",["Pequeñas Comunidades"]],["Pienso que así esta bien el grupo",["Pequeñas Comunidades"]],["Siento que así esta bien",["Acogida"]],["Me gusta como esta el grupo",["Acogida"]],["Pienso que el grupo asi esta bien",["Pequeñas Comunidades"]],["Ssi me gusta",["Acogida"]],["Sdi me gusta",["Acogida"]],["Me gustaría mejorar el horario",["Pequeñas Comunidades"]],["Asi esta bien",["Acogida"]],["Asi me gusta",["Acogida"]],["No todo para mi esta bien",["Pequeñas Comunidades"]],["Asi esta bien",["Pequeñas Comunidades"]],["Que estemos uniformadas con la.camiseta",["Pequeñas Comunidades"]],["Que llevemos la.camkseta siempee",["Salud y Ministros"]],["Utilizar la camiseta",["Salud y Ministros"]],["Que se ewcuchen las sgerencias",["Acogida"]],["Tanto egoísmo",["Cargueros"]],["Más acompañamiento de los sacerdotes",["Proclamadores"]],["Ninguno. Es un grupo muy unido",["Proclamadores"]],["Mas acompañamiento de los sacerdotes",["Proclamadores"]],["Que haya más unidad entre todos los grupos pastorales",["Proclamadores"]],["Conocer un poco más sobre la vida de los compañeros",["Proclamadores"]],["Para mejorar: que quién no asista a la reunión de los martes, y no de una excusa válida, que no se programe para proclamar.",["Proclamadores"]],["Mejorar la fraternidad en el grupo",["Proclamadores"]],["Ningún cambio",["Proclamadores"]],["Para mi todo esta bien",["Proclamadores"]],["Mas comunicación entre los integrantes del grupo",["Proclamadores"]],["Me siento muy satisfecho porque siempre he sido escuchado.",["Proclamadores"]],["Siempre encuentro la respuesta positiva.",["Pequeñas Comunidades"]],["Prepararnos constantemente para prestar el mejor servicio",["Proclamadores"]],["Ser más comprometidos con la eucaristía y las diferentes actividades",["Madres Mónicas"]],["Ser más responsables con La tarea",["Pequeñas Comunidades"]],["Rehabilitar la fe",["Proclamadores"]],["Leer más la biblia para así epr ser más de la braña fa de Dios",["Coro Yadah"]],["Estudiar más la biblia",["Pastoral Familiar"]],["Mas formaciin",["Coro Yadah"]],["Sotomayor unidad y participativos lo dejaría así",["Pequeñas Comunidades"]],["Ninguno, porque somos muy unidas y nos preocupamos y oramos las unas por las otras",["Pequeñas Comunidades"]],["Siento que así como estamos es un grupo unido",["Pequeñas Comunidades"]],["Todo me parece muy bien",["A los pies del Maestro"]],["Invitar más personas",["Salud y Ministros","A los pies del Maestro"]],["Siento que así vamos bien",["Pequeñas Comunidades"]],["Que saliéramos a hacer visitas a otros lugares para cambiar de ambiente",["Pequeñas Comunidades"]]],"m2":[["Que los integrantes del grupo se formen apropiadamente (estudien) y que no busquen figuración, sino que entiendan que se presta un servicio a Dios.",["Proclamadores"]],["Más retiros",["Chi Rho"]],["Hacer varios encuentros virtuales - cada 15 días - y uno presencial por mes.",["Catequistas"]],["Por ahora ningun cambio",["Chi Rho"]],["Hace poco ingrese, aun no puedo responder",["Varios grupos"]],["realizar mas acompañamiento al grupo por parte de los sacerdotes",["Voluntariado"]],["Sería muy valioso promover más espacios de encuentro, integración y oración entre los diferentes grupos pastorales, para conocernos mejor, compartir experiencias y trabajar unidos en una misma misión. También fortalecer la comunicación, la colaboración y el sentido de pertenencia a nuestra comunidad parroquial, recordando que, aunque tengamos diferentes carismas y servicios, todos somos parte de un mismo cuerpo en Cristo y estamos llamados a evangelizar con amor, unidad y alegría.",["Chi Rho"]],["Me gustaría que la gente que se compromete a participar lo hiciera realmente",["Madres Mónicas"]],["Ninguna por el momento",["Madres Mónicas"]],["Más acompañamiento del párroco",["Juvenil Shekinah"]],["Que los miembros de la Pastoral familiar se comprometan más con las diferentes actividades parroquiales",["Pastoral Familiar"]],["Acompañamiento con cada uno de los integrantes",["Adoradores"]],["Si bien cada catequista es libre y tiene lineamientos claros sobre que enseñar y guiar a los jovenes, considero que se debe orientar tambien a la motivación de los chicos y algunas personas son muy rígidas a a las temáticas o incluso a su criterio personal y esto genera roses incluso en la preparación de un tema. El problema no es la dirección o las temáticas porque esta claro y siempre se orienta, incluso los coordinadores son claros con la información, pero si es posible tener espacios para capacitarnos mas y respetar las diversas opiniones y llegar a buenos acuerdos seria bueno para la convivencia interna de los grupos",["Catequistas"]],["En las invitaciones de cada tema agregar una pequeña presentación de los expositores para edificar el interés en cada martes y así fortalecer la constancia",["Pastoral Familiar"]],["Un día de convivencia con nuestras familias para conocer más y que los demás miembros de la familia se integren más a la iglesia.",["Pastoral Familiar"]],["Ninguno, pienso que esta bien por el camino que va",["Juvenil Shekinah"]],["De pronto hacer mas actividades que inviten a mas personas a unirse porque es un grupo MUY positivo para la vida en pareja y en familia... adicionalmente seria lindo actividades al aire libre, como las actividades que hemos hecho a la romera con la parroquia, eso nos puede ayudar tambien a la integracion de los integrantes del grupo. Eso por aportar ideas pero ya el trabajo hecho es excelente",["Pastoral Familiar"]],["Mas participacion del equipo en las acrividades, en las decisiones, mejorar la comunidad y fraternidad entre los miembros del equipo, mas actividades internas de integración.",["Comunicaciones"]],["Difusión en redes sociales para atraer más jóvenes",["Varios grupos"]],["Un espacio más amplio, de resto todo bien",["Pastoral Familiar"]],["Todos los miembros tratemos de unirnos en los horarios de oracion",["Madres Mónicas"]],["El Rosario de los dos grupos",["Varios grupos"]],["REUNIONES MENSUALES",["Catequistas"]],["EVITAR LAS PREFERENCIAS ENTRE INTEGRANTES",["Proclamadores"]],["Generalmente más que el coordinador, somos nosotros los catequistas que debemos responder al llamado que nos hace el coordinador, para asistir a reuniones o capacitaciones. Que la información sea más clara y no se sature el chat.",["Catequistas"]],["Que sea más dinámico",["A los pies del Maestro"]],["Escucha activa Fortalecer la vida espiritual en comunidad Motivacion y liderazgo",["Catequistas"]],["iniciar espacios de asesorías espirituales individuales y por pareja dentro de los tiempos del grupo. Realizar articulación con la Arquidiócesis de Medellín para que sus Psicologos acompañen la pastoral.",["Pastoral Familiar"]],["El acompañamiento y comunicación con los coordinadores es excelente, deberíamos ser más unidos en el grupo y conocernos más entre las diferentes parejas, ya que a veces ni el nombre nos sabemos del que está al lado.",["Pastoral Familiar"]],["Me parece que todo funciona bien",["Chi Rho"]],["Está bien",["Madres Mónicas"]],["Posibilidad que otros preparen las sesiones, no solo los coordinadores",["Pastoral Familiar"]],["Falta mas compromiso por parte de catequistas para asistir a reuniones grupales,",["Catequistas"]],["Más formación",["Chi Rho"]],["Mas participación de los integrantes",["Voluntariado"]],["Que las vicitas al hospital no sea una sola persona . Ir de dos en dos si es posible se vuelve mas animado",["Voluntariado"]],["Ningún cambio",["Acogida"]],["Encuentros en los que se fortalezca la unión del grupo, diferentes a la reunión quincenal.",["Voluntariado"]],["Más compromiso en el grupo",["Acogida"]],["Que cada una pongamos de parte más Amor y ganas de participar en cada grupo",["Varios grupos"]],["Para que nuestro grupo siga en familia, todos cada día fortalecer ese compromiso y llamado que Dios nos hace a cada uno de seguir en perseverancia de esa invitación a estar a sus pies, adorandolo,",["A los pies del Maestro"]],["Mejorar la fraternidad y celebración de cumpleaños",["Acogida"]],["Que haya más compromiso de parte mía en las reuniones",["Voluntariado"]],["Hasta el momento sólo cambiaría un poco la reuniones que fueran más lúdicas",["Salud y Ministros"]],["Más compromiso a las reuniones",["Salud y Ministros"]],["Ser más responsable",["Acogida"]],["Estamos muy conectado no tengo cambios",["A los pies del Maestro"]],["No tengo.",["Acogida"]],["De parte de los integrantes tener más compromiso para apoyar a la coordinadora",["Acogida"]],["Así marcha muy bien",["Salud y Ministros"]],["Comunicación de la coordinadora",["Salud y Ministros"]],["Qué lo que hagamos sea sincero con mucho amo y de corazón..",["Salud y Ministros"]],["Más comunicación, que tengan en cuenta a todos los grupos, todos somos una misma iglesia en cristo",["Juvenil Shekinah"]],["No le cambiaría nada hasta acá el grupo me ha parecido muy claro y me conciso",["Pequeñas Comunidades"]],["Hasta ahora me ha parecido bien el funcionamiento",["Pequeñas Comunidades"]],["Todo está bien",["Pequeñas Comunidades"]],["Ningún cambio porque hemos crecido como comunidad",["Pequeñas Comunidades"]],["Para mí los coordinadores tienen mucho compromiso con las actividades",["Varios grupos"]],["Los grupos se fortalecen por el propio compromiso de los integrantes de lis grupos. Cada uno debe ser muy responsable con los compromisos adquiridos",["Voluntariado"]],["Convivencia y reuniones de integración",["Salud y Ministros"]],["Creo que ha Sido bueno el acompañamiento",["Cargueros"]],["Todo está perfecto",["Voluntariado"]]],"o1":[["Pertenecemos al grupo de cargueritos",["Cargueros"]],["No todo está bien",["Cargueros"]],["Debería hacerse una reunión semestral con todos los grupos, para conocerse y presentar información importante de las actividades que se vayan a desarrollar en ese tiempo, compartir logros, retos, propuestas, etc. Promover campañas con la información de los grupos pastorales para difundir y motivar la participación de michas otras personas de la comunidad.",["Comunicaciones"]],["Mamá de Grupo Cargueritos",["Cargueros"]],["Todo excelente",["Cargueros"]],["Más compromiso de otros compañeros",["Cargueros"]],["Solo quiero agradecer por el espacio para opinar. Como pequeña comunidad, me gustaría que estuvieramos más integrados con los demás grupos de la parroquia.",["Pequeñas Comunidades"]],["Somos una sola comunidad en difentes grupos",["Madres Mónicas"]],["Que en cada encuentro siempre mantengamos la.camisrta y en los encuentros tro en el grupo y mas la presencia del sacerdote",["Pequeñas Comunidades"]],["Solo agradecer a todos",["Proclamadores"]],["Siempre estar atenta a las necesidades de las personas. Los sacerdotes y la parroquia",["Proclamadores"]]],"o2":[["Necesitamos buscar la manera de que haya actividades intergrupos, para relacionar la misión de los diferentes grupos y evitar las \"ruedas sueltas\" (cada uno por su lado).",["Proclamadores"]],["El parroco deberia acompañar de vez en cuanto los grupos, entenderlos mas de cerca, vivir la experiencia.",["Chi Rho"]],["En este momento no tengo sugerencias",["Varios grupos"]],["Entiendo la disciplina del padre en su hora de sueño, pero considero que le hace falta compartir más con las comunidades que hacemos la asamblea en horas de la noche, porque así él nos preste el lugar, creo que la gente tiene que ver al padre y saber que él también vive su experiencia de comunidad.",["Chi Rho"]],["Demasiada gente inscrita en el grupo somos 68 y solo asistimos a oracion 4 o 5 máximo 9 y no todos los dias",["Madres Mónicas"]],["Invitar a otros grupos pastorales del mismo grupo de otras parroquias a nuestra parroquia",["Juvenil Shekinah"]],["Que los diferentes grupos pastorales visiten los demás grupos para conoces como trabajan",["Pastoral Familiar"]],["Me gustaría que las damas de la puerta a la entrada estén más dispuestas con las personas hacerlas llegar en las sillas que se encuentren desocupadas o brindarles acompañamientos a la llegada con más cariño como si lo fuera Jesús o la virgen Maria",["Adoradores"]],["Solo dar gracias a la parroquia y a esta comunidad en la que me siento feliz de pertenecer. Gracias",["Pastoral Familiar"]],["Podría sugerir incluir en la programación de nuestro grupo, los cumpleaños de los miembros, es decir, hacer una pequeña celebración cada dos o tres meses",["Pastoral Familiar"]],["FALTA DE COMPROMISO Y ACOMPAÑAMIENTO DEL PÁRROCO CON EL GRUPO",["Catequistas"]],["Crear más espacios de formación Espiritual para los catequistas.",["Catequistas"]],["MAYOR APOYO POR PARTE DEL PÁRROCO",["Proclamadores"]],["Que nosotros como servidores a la iglesia y como imagen demos ejemplo de los valores que les enseñamos a nuestros niños, que seamos más coherentes, hablamos de respeto y a veces no respetamos al compañero . Somos ejemplo y debemos trabajarlo más.",["Catequistas"]],["Proponer reuniones de integración para los grupos un poco más frecuentes",["Catequistas"]],["Puede ser muy enriquecedor el acompañamiento por parte de sus sacerdotes en diferente encuentros, que puedan vincularse con temas del sacramento del matrimonio, recordarnos nuestros votos matrimoniales y/o exponer diferentes temas.",["Pastoral Familiar"]],["Ojalá mas espacios de fratenidad",["Comunicaciones"]],["Actividades de integración",["Catequistas"]],["Capacitaciones, charlas a los grupos pastorales para formación pastoral pueden ser en el templo",["Madres Mónicas"]],["Quisiéramos integrarnos en más cosas pero desconocemos aún los grupos",["Pastoral Familiar"]],["Más compromiso de todos para el servicio",["Chi Rho"]],["Hacer más publicidad a los grupos y actividades que organice la parroquia, no solo en las misas, sino por redes sociales y pubicidad visual en la iglesia y otros lugares.",["Voluntariado"]],["En en todos los grupos manejen la misma dirección y la obediencia",["Acogida"]],["Debe haber integración de todos los grupos para conocer a sus integrantes y saber que hacen como grupo pastoral.",["A los pies del Maestro"]],["Más integración integrupal para conocernos mejor",["Acogida"]],["Debiéramos de hacer más actividades todos juntos, para no vernos tan divididos",["Salud y Ministros"]],["Una mayor promoción para aumentar el número de participantes en este servicio.",["Acogida"]],["Que los miembros de todos los grupos respeten y apoyen las reglas, cómo no apartar sillas durante los eventos. No traer mascotas a la iglesia. Como servidores debemos dar ejemplo.",["Acogida"]],["El acompañamiento de los sacerdotes",["Salud y Ministros"]],["Qué todos seamos uno y no haya ego dentro del grupo..yo Miriam amo esté grupo, Ami sinceramente me lo mostró Dios osea es una orden y yo lo creo, \"yo lo amo\"..",["Salud y Ministros"]],["No tengo nada para agregar todo mi aparecido muy chévere",["Pequeñas Comunidades"]],["Con eso es suficiente",["Pequeñas Comunidades"]],["Me parece siempre hay participación de los grupos y de verdad el padre tiene muy buen carisma para con la comunidad y los grupos antes gracias por todo lo que hace por nuestra comunidad",["Varios grupos"]],["Alguna vez se hizo una actividad de que los grupos se presentaban su mision e integrantes a los otros grupos Yo diría que las actividades de formación e integracion podrían ser después de las 6pm por los que trabajamos",["Voluntariado"]],["Poder participar más en las actividades del grupo concejo parroquial.",["Cargueros"]],["Mil graciasb",["Voluntariado"]]],"b1":[["Enfoque en el servicio. Mantenerse el servicio, fortalecer que somos servicio y no tenemos privilegios respecto a nadie",["Acogida"]],["Hace bn El acompañamiento a los enfermos. Fortalecer el conocimiento sobre el clero y los actos durante la eucaristía",["Salud y Ministros"]],["Fortaleciendo la fe de los niños",["Escuelita de Jesús"]],["Deberíamos ser un poco más incluidos en todas las actividades",["Cargueros"]],["Debe fortalecer el ambiente de comunidad, la comunicación y compartir entre los diferentes grupos de catequesis.",["Catequistas"]],["Seguir siendo ese grupo que siempre da de que hablar cosas buenas y mostrar a Dios siempre en todo lo que hagamos con el amor y la unión del grupo",["Cargueros"]],["Ir completamente alineados a lo que está establecido.",["Cargueros"]],["Buena asistencia en la semana mayor .. se puede fortalecer que en el resto del año se hagan presentes en las actividades",["Cargueros"]],["Guiar a los niños en su formación cristiana",["Cargueros"]],["Está Haciendo bien, en mejorar cada año el Santo sepulcro a la medida de las capacidades está haciendo bien en mejorar las vestimentas para las procesiones",["Cargueros"]],["La buena relación que manejamos todos. Actualmente somos un grupo muy bello donde uno encuentra paz y verdaderos amigos.",["Coro Yadah"]],["La unión",["Cargueros"]],["Somos un grupo donde nos apoyamos en todo momento amamos lo que nos une que es el amor por Dios",["Cargueros"]],["La unión debe mantenerse y fortalecerse",["Cargueros"]],["Tener muy buena comunicación entre el grupo .",["Cargueros"]],["La comunicación",["Acólitos"]],["Comunicación",["Cargueros"]],["La unión",["Catequistas"]],["Que crezca",["Salud y Ministros"]],["La comunicación",["Cargueros"]],["Comunicación",["Juvenil Shekinah"]],["En visitar los enfermos y más necesitados",["Salud y Ministros"]],["Crecemos espiritualmente por medio de la palabra",["Proclamadores"]],["Orar por los sacerdotes y familias",["Madres Mónicas"]],["Fortalecerse",["Cargueros"]],["Más comunicación",["Cargueros"]],["Se hace bien la labor de evangelizar a través de redes sociales y promover la participación activa en la misa dominical mediante las proyecciones. Debe mantenerse la publicación diaria de piezas con mensajes de la Palabra de Dios, la información del Santo del día, la difusión de los avisos parroquiales y se debe fortalecer la transmisión de la Eucaristía, ojalá diariamente o por lo menos la misa dominical, para que puedan vivirla personas que no pueden asistir al templo.",["Comunicaciones"]],["Más actividades",["Cargueros"]],["Yo considero que debe mantenerse la claridad y la organización en la información brindada por nuestra coordinadora que nos ha ayudado a ser un grupo pastoral en el que todo está organizado con tiempo y entendemos cuales son nuestros roles",["Salud y Ministros"]],["Considero que todo se está haciendo muy bien",["Voluntariado"]],["Manejan muy bien la logística y se desempeñan muy bien en Semana Santa , y mas union de grupo que es algo en lo que resaltan",["Cargueros"]],["Seguir unidos como una familia",["Cargueros"]],["Me gusta que el grupo se encarga de mantener sus responsabilidades al dia",["Cargueros"]],["Todo está bien",["Cargueros"]],["La union,la fortaleza y mentalidad de cada dia mejorar y hacer todo mejor que lo anterior",["Cargueros","Juvenil Shekinah"]],["Transmite ala comunidad fraternidad por medio de el canto para una oración más profunda",["Coro Yadah"]],["Apoyo en las actividades que se requieren , fortalecer el grupo de los niños cargueros",["Cargueros"]],["Integrar a los niños en estas actividades que les aumentan su amor por la iglesia",["Cargueros"]],["Es un grupo muy unido, como una familia, incentivando a otras personas para participar en el grupo y dando ejemplo.",["Cargueros"]],["Todo está perfecto",["Cargueros"]],["Todo súper bien",["Cargueros"]],["Todo muy bien",["Cargueros"]],["La unión de nosotros es brutal",["Cargueros"]],["Siempre unidos",["Cargueros"]],["Sino un grupo que carga la fe en sus hombres, por medio de representaciones podemos llevar la fe , con amor y devoción",["Cargueros"]],["La fraternidad entre los miembros del grupo y el apoyo para continuar en el caminar de la mano de Dios",["Pequeñas Comunidades"]],["Mantener la fratenirdad entre los niños y la motivación para servir en el Altar",["Acólitos"]],["Considero que este grupo hace una labor muy bonita, que es llevar el evangelio en imagen, mostrando a las personas la vida de Jesús. Debería mantenerse la unión del grupo.",["Cargueros"]],["Desde lo personal, estar más involucrada en el tema que se requiera",["Comunicaciones"]],["Como pequeña comunidad, considero que lo que estamos haciendo bien es la cercanía, la acogida y el conocernos de verdad. Nos apoyamos, oramos unos por otros y estamos pendientes de quien falta o está pasando por un momento difícil. Eso debería mantenerse y fortalecerse: esa familiaridad, la oración en comunidad y el servicio sencillo pero constante en la parroquia. También sería bueno fortalecer la participación y la comunicación entre nosotros, para que siendo pocos, sigamos siendo unidos y un testimonio de fe para los demás.",["Pequeñas Comunidades"]],["La oración y la perseverancia",["Madres Mónicas"]],["La perseverancia,y devoción,oracion",["Espiritualidad Mariana"]],["Oracion",["Madres Mónicas"]],["Las misiones donde estamos llevando la palabra de Dios a través de los grupos de las pequeñas comunidades",["Pequeñas Comunidades"]],["Seguir unidos y fortalecer el grupo para mantener la fe y seguir obrando",["Voluntariado"]],["Dejando semillas de amor y de fé",["Espiritualidad Mariana"]],["Enamorarnos mucho más de la Virgen Maria",["Espiritualidad Mariana"]],["Dar a conocer el estilo de vida de Jesús, de manera sencilla y clara, exhortando a quienes escuchan, a amarlo profundamente , a seguirlo y a confiar plenamente en Él.",["Pequeñas Comunidades"]],["Fortalecer el amor a la religión",["Chi Rho"]],["Intersección",["A los pies del Maestro"]],["Orar por los sacerdotes",["Cenáculo"]],["Más oración meditación lectura de la Biblia",["Espiritualidad Mariana"]],["Estudio de la Palabra, para ponerla en obra",["Pequeñas Comunidades"]],["Se debe fortalecer el respeto y amor a la sagrada Eucaristía, pues hay algunos que creen que lo que llevan es un galleta y no a NUESTRO Señor Jesucristo También deben saber cuántas sagradas hostias deben llevar para que no sobren tantas",["Salud y Ministros"]],["Fortalecer las relaciones entre los miembros",["Pequeñas Comunidades"]],["Nos esta ayudando mucho espiritualmente, que haya más acompañamiento de los otros grupos pastorales",["Pequeñas Comunidades"]],["Que el grupo esta bien asi",["Acogida"]],["Asi esta bien el grupo",["Acogida"]],["Hemos aprendido mucho a conocer a Dios y eso fortalece nuestro espiritu",["Pequeñas Comunidades"]],["Siento que así esta bien el grupo",["Acogida"]],["Siento que así esta bien",["Acogida"]],["Poner mas atención y tener mas presente lo que me enseñan",["Pequeñas Comunidades"]],["Sabiduría y que alimentamos el alma",["Acogida"]],["Esta muy bien porque aporta mucho a mi fe , mantenerse todo",["Pequeñas Comunidades"]],["Estoy aprendiendo lo que no sabia , tener mas presente lo que opinamos todas",["Pequeñas Comunidades"]],["Considero que estoy recibiendo buena información de la fe, me gustaría que ojalá siempre estemos con la camiseta en las reuniones y que de vez en cuando contemos con la.prwsencia del padre",["Pequeñas Comunidades"]],["Que estemos unidos en fe y utilicemos la camiseta",["Salud y Ministros"]],["La catequesis con Feiipe",["Acogida"]],["La unión y el diálogo",["Cargueros"]],["Aprendiendo y conociendo mucho sobre Liturgia y sobre boblia",["Proclamadores"]],["El que me formé en las enseñanzas de la Palabra de Dios",["Proclamadores"]],["Orar en comunidad ha hecho ha creado un lazo fraterno en el amor de María para su Hijo Jesús",["Espiritualidad Mariana"]],["Es un grupo pastoral con una misión clara, siento que todo lo hace de la manera correcta y nos ayuda a entender que todo es para gloria de Dios y no la nuestra. Nos ayuda a crecer en espiritualidad y a ser mejores proclamadores cada vez. Para mí es un excelente grupo.",["Proclamadores"]],["Capacitandome",["Proclamadores"]],["Se comparten las ideas y opiniones del grupo",["Proclamadores"]],["Se está dando apoyo en las eucaristías y se debe fortalecer la fraternidad",["Proclamadores"]],["La participación activa y necesaria en cada Eucaristía, como apoyo a la proclamación.",["Proclamadores"]],["Estamos recibiendo evangelización y se debe mantener",["Proclamadores"]],["El coordinador es muy organizado y conoce de su misión.",["Proclamadores"]],["Lo espiritual.x",["Proclamadores"]],["Las lecturas deberían ser más repartidas entre todos y no solo siempre los mismos para mi esta",["Proclamadores"]],["Me parece que esta muy bién",["Proclamadores"]],["La información que siempre recibo es clara",["Proclamadores"]],["El estudio de la palabra",["Pequeñas Comunidades"]],["Compromiso - fortalecer el estudio de la palabra",["Proclamadores"]],["Oracion",["Madres Mónicas"]],["La acogida",["Pequeñas Comunidades"]],["Al enseñarnos a estudiar y proclamar la palabra",["Proclamadores"]],["Proclamando bien la palabra de Dios y ponerla en práctica 🙏",["Coro Yadah"]],["Si bien , mantenerse y fortalecerme para así entender la palabra de Cristo",["Pastoral Familiar"]],["Estudio para cantar mejor, mejor fraternidas",["Coro Yadah"]],["Nos ha dado muchas enseñanzas, y en la Eucaristía fortalecen nuestro aprendizaje",["Pequeñas Comunidades"]],["He aprendido mucho sobre La Palabra. Me siento muy contenta.",["Pequeñas Comunidades"]],["Siente que es un grupo muy unido y comprometido para realizar las actividades programadas",["Pequeñas Comunidades"]],["Siento que todo",["Pequeñas Comunidades"]],["La orientación y las enseñanzas que nosdan",["A los pies del Maestro"]],["La unión y el respeto y la perseverancia",["Salud y Ministros"]],["Todo está muy claro",["A los pies del Maestro"]],["Siento que está conformado perfectamente y no le haría ningún cambio",["Pequeñas Comunidades"]],["Aprendiendo más en comunidad, fortalecer más la unión u la comunicación",["Pequeñas Comunidades"]]],"b2":[["El estudio profundo de la Palabra de Dios, previo a la proclamación. La formación que nos imparte el Coordinador del grupo",["Proclamadores"]],["Concientizar sobre dar testimonio",["Proclamadores"]],["Las prédicas y los servicios de intersección por la gente y las familias",["Chi Rho"]],["Considero que son claros con la información, que el ambiente en general es muy cálido amable y colaborativo. Quizá se pueda mejorar el día en que se envían la guía, por ejemplo lunes o martes máximo para tener más tiempo de preparar los encuentros con los niños.",["Catequistas"]],["Mostrar al mundo que Dios es amor, ayudar a construir una relación íntima con Dios, perdonar y sanar heridas, aprender a orar y alabar, y conocer mas sobre la palabra de Dios",["Chi Rho"]],["Las visitas a los enfermos en el hospital",["Voluntariado"]],["Mantener la formación y compartir",["Varios grupos"]],["uba buena labor en el hospital pero galta compromiso con las actividades de la parroquia",["Voluntariado"]],["La unión y la amistad que se forma por medio del acogimiento",["Juvenil Shekinah"]],["Considero que nuestro grupo pastoral se destaca por la fraternidad, la oración en comunidad y el deseo de acercar a más personas al amor de Dios. Es importante mantener y fortalecer la formación espiritual, la escucha, el acompañamiento y la participación activa de los hermanos, procurando que cada encuentro nos ayude a crecer en la fe, vivir el Evangelio y ser instrumentos del amor de Cristo en nuestra comunidad.",["Chi Rho"]],["Participación debe fortalecerse",["Madres Mónicas"]],["Considero que todo está muy bien, la oración, muy frecuente super y el incremento de los participantes cada se hace mayor.",["Madres Mónicas"]],["Generar confianza e integración a cada miembro",["Juvenil Shekinah"]],["Que permanezca el amor y la unión en comunidad que nos hacen sentir en el grupo",["Juvenil Shekinah"]],["Invitación a terceros para dictar charlas de interés para todos",["Pastoral Familiar"]],["Bien dentro lo normal, pero si deberíamos de reunirnos al menos una vez al mes",["Adoradores"]],["En general es un muy buen grupo, con directrices claras y muy bien encaminado,personalmente pienso que se puede trabajar internamente para mejorar individualmente",["Catequistas"]],["Siempre es muy nutritivo el aprendizaje desde los testimonios de otras parejas y expositores como el psicólogo.",["Pastoral Familiar"]],["Los temas que trata y discute son muy pertinentes y oportunos, y así está bien como se organizan. Es mi primer año en el grupo y me ha parecido muy bien todo.",["Pastoral Familiar"]],["Considero que el grupo juvenil es un buen grupo, con un buen ambiente de formacion y dinamico, las coordinadoras y sub lideres del grupo siempre escuchan y estan atentos ante cualquier dificultad, en general pienso que va por buen camino y personalmente no tengo algo específico que fortalecer",["Juvenil Shekinah"]],["Buscar mas gente que colaboré",["Comunicaciones"]],["Hay mucha guia y mucho fundamento teológico, pero es muy chevere cuando lo complementan con informacion profesional de otras areas",["Pastoral Familiar"]],["Campañas, redes sociales, proyecciones",["Comunicaciones"]],["En el vínculo, tan unido que hemos tenido todos , nadie se queda atrás, todos somos un todo y en nuestra individualidad somos tomados en cuenta",["Sin especificar"]],["Fortalecer los lazos de amistad y crecimiento espiritual",["Varios grupos"]],["Se deben mantener y fortalecer los encuentros semanales, ya que nos nutren tanto a nivel de pareja como familiar.",["Pastoral Familiar"]],["Oración debe mantenerse",["Madres Mónicas"]],["El Rosario todos los días en los dos grupos",["Varios grupos"]],["CATEQUESIS PERSONALIZADAS POR FAMILIAS",["Catequistas"]],["DIRECCIONAMIENTO SEMANAL Y ESTUDIO BÍBLICO",["Proclamadores"]],["Más compromiso por parte del grupo de catequesis que aunque no es remunerado se crea un compromiso por parte de la parroquia, más acompañamiento del párroco en las reuniones.",["Catequistas"]],["La intersección",["A los pies del Maestro"]],["Fortalecer la organizacion y el consenso",["Catequistas"]],["El compromiso con el servicio de la catequesis es excelente,fortalecer el los encuentros como grupo propuestos por el coordinador",["Catequistas"]],["La forma en la que se planean los encuientros de una maenra experiencial, con temas cotididianos y bastante variedad siempre basados en la palabra. Considerar un espacio más grande ya que el grupo ha venido creciendo y quedamos en ocasiones muy estrechos donde estamos en la antigua sacristia.",["Pastoral Familiar"]],["Promueven el amor y la unidas familiar teniendo a Dios padre como eje principal de nuestra vida",["Pastoral Familiar"]],["Las redes sociales",["Comunicaciones"]],["La Union",["Catequistas"]],["Ayudamos al párroco en las actividades que el nesecita",["Chi Rho"]],["Unidad",["Madres Mónicas"]],["Darnos apertura y bienvenida",["Pastoral Familiar"]],["Compromiso en la catequesis con los niños",["Catequistas"]],["Oración de intercesión, formación",["Chi Rho"]],["Una participación activa en el hospital",["Voluntariado"]],["Resolución de dudas en las eucaristías",["Acogida"]],["mas a compañamiento de un sacerdote",["Voluntariado"]],["Todo muy bien excelente grupo y compañeros",["Acogida"]],["La asistencia al hospital, debe ser más constante.",["Voluntariado"]],["persevera en la fraternidad y mantiene lazos solidos de hermandad, interés genuino por el otro, escuchándolo y apoyándolo en las dificultades que pueda llegar a tener",["Pequeñas Comunidades"]],["El compromiso",["Acogida"]],["inventarse más opciones para q todas participen más",["Varios grupos"]],["Nuestro grupo a los pies del maestro, es de oración e intersección.",["A los pies del Maestro"]],["Hay mucha colaboración entre los compañeros y compromiso con el ministerio",["Acogida"]],["Hay compromiso",["Voluntariado"]],["Pienso que siempre ha estado muy enfocado en la labor que nos corresponde, que le mejoraría que nos dieran más capacitaciones sobre todo sobre la liturgia, y nos enseñaran el nombre de cada paso de l los pasos de cada cosa",["Salud y Ministros"]],["Hay compromiso debe mantenerse",["Salud y Ministros"]],["Integración más integración y compartir",["Acogida"]],["Grupo unido y activo",["A los pies del Maestro"]],["La acogida y atención a los feligreses, colaboración al oficiante en la eucaristia.",["Acogida"]],["Convocar más personas para que haya más apoyo",["Acogida"]],["Hasta ahora la líder es eficaz, siento que todo marcha bien.",["Salud y Ministros"]],["La unidad del grupo",["Salud y Ministros"]],["Las visitas a los enfermos sus necesidades..cuando urge eucaristía por su gravedad.. Qué haya",["Salud y Ministros"]],["La integración de los Jóvenes, el llamado a ser una pequeña comunidad y seguir ayudando a los demás Jóvenes de la parroquia a encontrar y buscar ese llamado o encuentro con Dios, obras de caridad",["Juvenil Shekinah"]],["Considero que el objetivo del grupo nos da a conocer siempre la palabra de Dios, creo que no le faltaría nada",["Pequeñas Comunidades"]],["Me debo fortalecer mashasthas",["Pequeñas Comunidades"]],["Más acompañamiento del padre",["Pequeñas Comunidades"]],["La lectio divina me ha permitido entender mucho mejor el evangelio",["Pequeñas Comunidades"]],["Que todos los del grupo tengamos más sentido de pertenencia y más compromiso .",["Varios grupos"]],["La escucha",["Pequeñas Comunidades"]],["Hace muy bien su lesión de acompañar espiritualmente a los enfermos, para fortalecerse debe seguir preparándose espiritualmente y convocar a otras personas a ser voluntarias",["Voluntariado"]],["Comunión y visita a enfermos",["Salud y Ministros"]],["La buena participación en los diferentes eventos parroquiales que nos tienen en consideración",["Cargueros"]],["Que se mantenga como está el Grupo",["Voluntariado"]],["Más compromiso",["Voluntariado"]]]};
+  var QS = [
+    ['m', '¿Qué cambios o acciones propondría para mejorar el funcionamiento y la unión de este grupo pastoral?'],
+    ['o', 'Otra opinión o sugerencia'],
+    ['b', '¿Qué considera que está haciendo bien este grupo pastoral y que debería mantenerse o fortalecerse?']
+  ];
+  var host = document.getElementById('todos');
+
+  /* Filtro por grupo */
+  var seen = {};
+  Object.keys(COM).forEach(function (k) { COM[k].forEach(function (c) { c[1].forEach(function (g) { seen[g] = (seen[g] || 0) + 1; }); }); });
+  var gnames = Object.keys(seen).sort(function (a, b) { return a.localeCompare(b, 'es'); });
+  var fbar = el('div', 'filtro');
+  var flab = el('label', '', 'Ver solo los comentarios de:');
+  flab.setAttribute('for', 'f-grupo');
+  var sel = el('select');
+  sel.id = 'f-grupo';
+  var op0 = el('option', '', 'Todos los grupos');
+  op0.value = '';
+  sel.appendChild(op0);
+  gnames.forEach(function (g) { var o = el('option', '', g + ' (' + seen[g] + ')'); o.value = g; sel.appendChild(o); });
+  fbar.appendChild(flab);
+  fbar.appendChild(sel);
+  fbar.appendChild(el('p', 'nota', 'Cada comentario muestra a qué grupo corresponde. Si una persona evaluó varios grupos, el comentario aparece en el grupo que ella indicó en esa parte del formulario.'));
+  host.parentNode.insertBefore(fbar, host);
+
+  var blocks = [];
+  QS.forEach(function (q) {
+    var d = el('details', 'all'), sm = el('summary');
+    var cnt = el('span', 'count num', '');
+    sm.appendChild(el('span', '', q[1]));
+    sm.appendChild(cnt);
+    d.appendChild(sm);
+    var inner = el('div', 'inner');
+    var heads = [];
+    ['1', '2'].forEach(function (h) {
+      var list = COM[q[0] + h];
+      var h4 = el('h4', '', '');
+      inner.appendChild(h4);
+      var ul = el('ul', 'quotes tight');
+      var items = [];
+      list.forEach(function (c) {
+        var li = el('li', '');
+        li.appendChild(el('span', 'grp', c[1].join(' · ')));
+        li.appendChild(document.createTextNode(c[0]));
+        ul.appendChild(li);
+        items.push({ li: li, g: c[1] });
+      });
+      inner.appendChild(ul);
+      heads.push({ h4: h4, h: h, items: items, ul: ul });
+    });
+    d.appendChild(inner);
+    host.appendChild(d);
+    blocks.push({ d: d, cnt: cnt, heads: heads });
+  });
+
+  function aplicar(g) {
+    blocks.forEach(function (b) {
+      var total = 0;
+      b.heads.forEach(function (x) {
+        var n = 0;
+        x.items.forEach(function (it) {
+          var ok = !g || it.g.indexOf(g) > -1;
+          it.li.hidden = !ok;
+          if (ok) n++;
+        });
+        total += n;
+        x.h4.textContent = 'Hoja ' + x.h + ' · ' + n + (n === 1 ? ' comentario' : ' comentarios');
+        x.h4.hidden = x.ul.hidden = false;
+        if (g && n === 0) { x.h4.hidden = true; x.ul.hidden = true; }
+      });
+      b.cnt.textContent = total + (total === 1 ? ' comentario' : ' comentarios');
+      b.d.hidden = (g && total === 0);
+      if (g && total > 0) b.d.open = true;
+    });
+  }
+  sel.addEventListener('change', function () { aplicar(sel.value); });
+  aplicar('');
+
+  /* Menú: marca la sección visible */
+  var links = Array.prototype.slice.call(document.querySelectorAll('#nav a'));
+  function mark(id) {
+    links.forEach(function (a) {
+      if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+  }
+  mark('resumen');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) mark(e.target.id); });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    document.querySelectorAll('main section').forEach(function (s) { io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
