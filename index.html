@@ -150,8 +150,13 @@ tbody tr:last-child td { border-bottom: 0; }
 
 /* Resultados en frases */
 .facts { display: flex; flex-direction: column; gap: 14px; }
-.facts li { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 14px; align-items: center; }
-.facts b { font-size: 28px; line-height: 1; font-weight: 700; color: var(--accent-deep); white-space: nowrap; }
+.facts li { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 14px; align-items: center; }
+.facts b { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; line-height: 1; font-weight: 700; color: var(--accent-deep); white-space: nowrap; }
+.facts b .n { font-size: 34px; line-height: 1; }
+.facts b .n.sm { font-size: 27px; }
+.facts b .d { font-size: 13px; line-height: 1.1; font-weight: 500; color: var(--muted); }
+.facts .pc { color: var(--muted); font-size: 14px; white-space: nowrap; }
+.plain { margin: 0 0 14px; padding: 14px 16px; border-radius: 14px; background: var(--track); font-size: 15px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
 .facts p { font-size: 16px; line-height: 1.4; text-wrap: pretty; }
 .facts li.warn b { color: #B45309; }
 
@@ -255,7 +260,7 @@ footer p { max-width: 860px; text-wrap: pretty; }
       <ul>
         <li><strong>Casi todos están satisfechos.</strong> 9 de cada 10 evaluaciones califican su satisfacción general con 4 o 5 sobre 5.</li>
         <li><strong>Lo mejor valorado:</strong> recibir la información a tiempo, el ambiente de respeto y el acompañamiento del coordinador.</li>
-        <li><strong>Lo que más puede crecer:</strong> conocer con claridad el objetivo del grupo (84 %), sentir total confianza para opinar (76 %), participar con frecuencia en la parroquia (59 %) y conocer las prioridades del párroco (57 %).</li>
+        <li><strong>Lo que más puede crecer:</strong> 8 de cada 10 conocen con claridad el objetivo de su grupo y 8 de cada 10 se expresan con total confianza; 6 de cada 10 participan con frecuencia en la parroquia y 6 de cada 10 conocen con claridad las prioridades del párroco.</li>
         <li><strong>Hay tres grupos donde conviene conversar con calma</strong> y siete respuestas que hay que confirmar. Están en la sección «Qué atender primero».</li>
       </ul>
       <p class="note">Cómo leer esta página: respondieron 157 personas. En la primera hoja cada persona pudo evaluar hasta tres grupos, por eso hay 194 evaluaciones de grupo. Las notas van de 1 (la más baja) a 5 (la más alta).</p>
@@ -263,47 +268,47 @@ footer p { max-width: 860px; text-wrap: pretty; }
 
     <div class="sec-head" style="margin-top: 8px">
       <h2>Los resultados en frases</h2>
-      <p>Cada cifra dice qué porcentaje respondió eso. En ámbar, lo que más puede mejorar.</p>
+      <p>Cada cifra dice cuántas de cada 10 personas respondieron eso; entre paréntesis va el porcentaje exacto. En ámbar, lo que más puede mejorar.</p>
     </div>
     <div class="grid g-3">
       <div class="card">
         <h3>Dentro de los grupos</h3>
         <p class="sub">Sobre las 194 evaluaciones de grupo</p>
         <ul class="facts">
-          <li><b class="num">91 %</b><p>califica su satisfacción general con 4 o 5 sobre 5.</p></li>
-          <li><b class="num">96 %</b><p>dice que casi siempre o siempre hay un ambiente de respeto.</p></li>
-          <li><b class="num">98,5 %</b><p>dice que casi siempre o siempre recibe la información a tiempo.</p></li>
-          <li><b class="num">95 %</b><p>dice que casi siempre o siempre su coordinador lo acompaña.</p></li>
-          <li><b class="num">84 %</b><p>conoce con claridad el objetivo de su grupo.</p></li>
-          <li><b class="num">76 %</b><p>se expresa con total confianza dentro del grupo.</p></li>
-          <li><b class="num">86 %</b><p>asiste siempre o casi siempre a las reuniones de su grupo.</p></li>
-          <li class="warn"><b class="num">63 %</b><p>se siente plenamente tenido en cuenta por la parroquia.</p></li>
+          <li><b class="num"><span class="n">9</span><span class="d">de cada 10</span></b><p>califica su satisfacción general con 4 o 5 sobre 5 <span class="pc">(91 %)</span>.</p></li>
+          <li><b class="num"><span class="n sm">casi 10</span><span class="d">de cada 10</span></b><p>dice que casi siempre o siempre hay un ambiente de respeto <span class="pc">(96 %)</span>.</p></li>
+          <li><b class="num"><span class="n sm">casi 10</span><span class="d">de cada 10</span></b><p>dice que casi siempre o siempre recibe la información a tiempo <span class="pc">(98,5 %)</span>.</p></li>
+          <li><b class="num"><span class="n sm">casi 10</span><span class="d">de cada 10</span></b><p>dice que casi siempre o siempre su coordinador lo acompaña <span class="pc">(95 %)</span>.</p></li>
+          <li><b class="num"><span class="n">8</span><span class="d">de cada 10</span></b><p>conoce con claridad el objetivo de su grupo <span class="pc">(84 %)</span>.</p></li>
+          <li><b class="num"><span class="n">8</span><span class="d">de cada 10</span></b><p>se expresa con total confianza dentro del grupo <span class="pc">(76 %)</span>.</p></li>
+          <li><b class="num"><span class="n">9</span><span class="d">de cada 10</span></b><p>asiste siempre o casi siempre a las reuniones de su grupo <span class="pc">(86 %)</span>.</p></li>
+          <li class="warn"><b class="num"><span class="n">6</span><span class="d">de cada 10</span></b><p>se siente plenamente tenido en cuenta por la parroquia <span class="pc">(63 %)</span>.</p></li>
         </ul>
       </div>
       <div class="card">
         <h3>Participación en la parroquia</h3>
         <p class="sub">Sobre las 157 personas; en las razones podían marcar varias</p>
         <ul class="facts">
-          <li class="warn"><b class="num">59 %</b><p>participa con frecuencia en las actividades de la parroquia.</p></li>
-          <li class="warn"><b class="num">41 %</b><p>participa solo algunas veces, o rara vez o nunca.</p></li>
-          <li><b class="num">68 %</b><p>dice que no participa más por falta de tiempo.</p></li>
-          <li><b class="num">14 %</b><p>dice que no participa más por horarios que no le convienen.</p></li>
-          <li><b class="num">12 %</b><p>dice que no participa más por transporte, salud o movilidad.</p></li>
-          <li><b class="num">9 %</b><p>dice que no participa más porque no se entera a tiempo.</p></li>
-          <li><b class="num">17 %</b><p>dice que no tiene ninguna dificultad para participar.</p></li>
+          <li class="warn"><b class="num"><span class="n">6</span><span class="d">de cada 10</span></b><p>participa con frecuencia en las actividades de la parroquia <span class="pc">(59 %)</span>.</p></li>
+          <li class="warn"><b class="num"><span class="n">4</span><span class="d">de cada 10</span></b><p>participa solo algunas veces, o rara vez o nunca <span class="pc">(41 %)</span>.</p></li>
+          <li><b class="num"><span class="n">7</span><span class="d">de cada 10</span></b><p>dice que no participa más por falta de tiempo <span class="pc">(68 %)</span>.</p></li>
+          <li><b class="num"><span class="n">1</span><span class="d">de cada 10</span></b><p>dice que no participa más por horarios que no le convienen <span class="pc">(14 %)</span>.</p></li>
+          <li><b class="num"><span class="n">1</span><span class="d">de cada 10</span></b><p>dice que no participa más por transporte, salud o movilidad <span class="pc">(12 %)</span>.</p></li>
+          <li><b class="num"><span class="n">1</span><span class="d">de cada 10</span></b><p>dice que no participa más porque no se entera a tiempo <span class="pc">(9 %)</span>.</p></li>
+          <li><b class="num"><span class="n">2</span><span class="d">de cada 10</span></b><p>dice que no tiene ninguna dificultad para participar <span class="pc">(17 %)</span>.</p></li>
         </ul>
       </div>
       <div class="card">
         <h3>Prioridades y comunicación</h3>
         <p class="sub">Prioridades: sobre las 157 personas. Canales: sobre las 194 evaluaciones, podían marcar varios</p>
         <ul class="facts">
-          <li class="warn"><b class="num">57 %</b><p>conoce con claridad las prioridades pastorales del párroco.</p></li>
-          <li><b class="num">29 %</b><p>conoce solo algunas de esas prioridades.</p></li>
-          <li><b class="num">13 %</b><p>las ha oído sin tenerlas claras o no las conoce.</p></li>
-          <li><b class="num">93 %</b><p>recibe la información por el grupo de WhatsApp.</p></li>
-          <li><b class="num">48 %</b><p>la recibe también en las reuniones del grupo.</p></li>
-          <li><b class="num">23 %</b><p>la recibe por comunicación verbal o personal.</p></li>
-          <li><b class="num">13 %</b><p>la recibe por llamadas telefónicas.</p></li>
+          <li class="warn"><b class="num"><span class="n">6</span><span class="d">de cada 10</span></b><p>conoce con claridad las prioridades pastorales del párroco <span class="pc">(57 %)</span>.</p></li>
+          <li><b class="num"><span class="n">3</span><span class="d">de cada 10</span></b><p>conoce solo algunas de esas prioridades <span class="pc">(29 %)</span>.</p></li>
+          <li><b class="num"><span class="n">1</span><span class="d">de cada 10</span></b><p>las ha oído sin tenerlas claras o no las conoce <span class="pc">(13 %)</span>.</p></li>
+          <li><b class="num"><span class="n">9</span><span class="d">de cada 10</span></b><p>recibe la información por el grupo de WhatsApp <span class="pc">(93 %)</span>.</p></li>
+          <li><b class="num"><span class="n">5</span><span class="d">de cada 10</span></b><p>la recibe también en las reuniones del grupo <span class="pc">(48 %)</span>.</p></li>
+          <li><b class="num"><span class="n">2</span><span class="d">de cada 10</span></b><p>la recibe por comunicación verbal o personal <span class="pc">(23 %)</span>.</p></li>
+          <li><b class="num"><span class="n">1</span><span class="d">de cada 10</span></b><p>la recibe por llamadas telefónicas <span class="pc">(13 %)</span>.</p></li>
         </ul>
       </div>
     </div>
@@ -317,13 +322,14 @@ footer p { max-width: 860px; text-wrap: pretty; }
     <div class="grid g-2">
       <div class="card">
         <h3>Entre el 76 % y el 84 % elige la mejor opción en 8 de las 10 preguntas</h3>
-        <p class="sub">Solo el 63 % se siente plenamente tenido en cuenta y el 42 % asiste siempre a las reuniones. Porcentaje de las 194 evaluaciones que eligen la mejor opción.</p>
+        <p class="sub">Solo 6 de cada 10 se sienten plenamente tenidos en cuenta (63 %) y solo 4 de cada 10 asisten siempre a las reuniones (42 %). Porcentaje de las 194 evaluaciones que eligen la mejor opción.</p>
         <ul class="rows" id="preguntas" style="--lw: 230px"></ul>
         <p class="note">En ámbar, las preguntas con menos del 70 % en la mejor opción.</p>
       </div>
       <div class="card">
         <h3>Satisfacción de los 19 grupos</h3>
         <p class="sub">Promedio de 1 a 5, donde 5 es la mejor nota</p>
+        <p class="plain"><strong>En palabras simples:</strong> de los 10 grupos con 8 o más respuestas, 6 de cada 10 tienen una satisfacción de 4,5 o más; 3 de cada 10 están entre 4,3 y 4,5; y 1 de cada 10 (Catequistas) llega a 4,0. Ninguno está por debajo de 4.</p>
         <p class="stack-title">Grupos con 8 o más respuestas</p>
         <ul class="rows" id="grupos" style="--lw: 160px"></ul>
         <p class="stack-title" style="margin-top: 24px">Grupos con menos de 8 respuestas</p>
@@ -359,7 +365,7 @@ footer p { max-width: 860px; text-wrap: pretty; }
     </div>
     <div class="grid g-2e">
       <div class="card">
-        <h3>Cómo reciben la información: el 93 % por WhatsApp</h3>
+        <h3>Cómo reciben la información: 9 de cada 10 por WhatsApp (93 %)</h3>
         <p class="sub">Porcentaje de las 194 evaluaciones; podían marcar varios canales</p>
         <ul class="rows" id="canales" style="--lw: 190px"></ul>
       </div>
@@ -382,7 +388,7 @@ footer p { max-width: 860px; text-wrap: pretty; }
     </div>
     <div class="grid g-2e">
       <div class="card">
-        <h3>Por qué no participan más: el 68 % dice que es falta de tiempo</h3>
+        <h3>Por qué no participan más: 7 de cada 10 dicen que es falta de tiempo (68 %)</h3>
         <p class="sub">Porcentaje de las 157 personas; podían marcar varias razones</p>
         <ul class="rows" id="razones" style="--lw: 190px"></ul>
         <p class="note">En gris, quienes dicen no tener dificultades. Otras razones, como la falta de motivación o no tener claro el propósito, suman 3 % o menos cada una.</p>
